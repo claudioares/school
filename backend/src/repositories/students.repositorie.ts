@@ -12,10 +12,10 @@ export class StudentsRepositorie implements ICreateStudant {
         return dataBase;
     }
 
-    async login({ email, password }: ILoginType): Promise<IStudants | null> {
+    async login(_email:string): Promise<IStudants | null> {
         const studentLogin = await prisma.student.findMany({
             where:{
-                email, password
+                email:_email
             }
         })
 

@@ -26,5 +26,5 @@ export interface ILoginType {
 
 export interface ICreateStudant {
     create({student, email, password }:ICreateStudantType):Promise<IStudants>
-    login({email, password}:ILoginType):Promise<IStudants | null>
+    login(email:string):Promise<IStudants | null>
 }

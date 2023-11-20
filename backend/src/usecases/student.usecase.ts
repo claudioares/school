@@ -1,6 +1,7 @@
+import { authTokenCreate } from "../ middlewares/auth.token.create";
 import { authVerifyEmail } from "../ middlewares/auth.verify.email";
 import { authVerifyPassword } from "../ middlewares/auth.verify.password";
-import { ICreateStudantType, ILoginType, IStudants } from "../interfaces/students.interface";
+import { ILoginType, IStudants } from "../interfaces/students.interface";
 import { StudentsRepositorie } from "../repositories/students.repositorie";
 
 
@@ -11,24 +12,33 @@ export class StudentUseCase {
         this.studentRepositorie = new StudentsRepositorie();
     }
 
-    async create({student, email, password}:ICreateStudantType){
+    async create(student:string, email:string, password:string){
         const verifyEmailExist = await authVerifyEmail(email);
-        if(verifyEmailExist) throw new Error ("ERROR! This email is already registered!");
+        if(verifyEmailExist.length > 0) throw new Error ("ERROR! This email is already registered!");
         
         const studentRepositorie = await this.studentRepositorie.create({student, email, password});
 
         return studentRepositorie;
     }
 
-    async login ({email, password}:ILoginType):Promise<IStudants | null> {
-        const verifyEmailExist = await authVerifyEmail(email);
-        if(verifyEmailExist.length <= 0) throw new Error ("ERROR! Email not authorized!")
-
-        const verifyPassword = await authVerifyPassword(password);    
-        if(verifyPassword.length <= 0) throw new Error ("ERROR! Student not authorized!")
+    async login (email:string, password:string):Promise<IStudants | null | string | {}> {
+        const authVerifyEmailExist = await authVerifyEmail(email);
+        if(authVerifyEmailExist.length <= 0) {
+            return "ERROR! Email or password not authorized!"
+        }
         
+        const VerifyPassword = await authVerifyPassword(password, email);    
+        if(!VerifyPassword) {
+            return "ERROR! Student not authorized!"
+        }
+        
+        
+        const studentLogin = await this.studentRepositorie.login(email)
+        const [{password:_, ...studentNotPassword},...student]:any = studentLogin;
+        
+        const jwtToken = await authTokenCreate(studentLogin?.id)
 
-        const studentLogin = await this.studentRepositorie.login({email, password})
-        return studentLogin;
+    
+        return [studentNotPassword, jwtToken];
     }
 }
