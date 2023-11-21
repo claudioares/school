@@ -1,7 +1,7 @@
 import { prisma } from "../database/prisma.config";
-import { ICreateStudantType, ICreateStudant, IStudants, ILoginType } from "../interfaces/students.interface";
+import { ICreateStudantType, IMethodsStudant, IStudants, ILoginType } from "../interfaces/students.interface";
 
-export class StudentsRepositorie implements ICreateStudant {
+export class StudentsRepositorie implements IMethodsStudant {
     async create({ student, email, password }: ICreateStudantType): Promise<IStudants> {
         const dataBase = await prisma.student.create({
             data:{

@@ -1,7 +1,7 @@
 import { authTokenCreate } from "../ middlewares/auth.token.create";
 import { authVerifyEmail } from "../ middlewares/auth.verify.email";
 import { authVerifyPassword } from "../ middlewares/auth.verify.password";
-import { ILoginType, IStudants } from "../interfaces/students.interface";
+import { IStudants } from "../interfaces/students.interface";
 import { StudentsRepositorie } from "../repositories/students.repositorie";
 
 
