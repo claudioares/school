@@ -5,6 +5,7 @@ import { IStudants } from "../interfaces/students.interface";
 import { StudentsRepositorie } from "../repositories/students.repositorie";
 
 
+
 export class StudentUseCase {
     
     private studentRepositorie:StudentsRepositorie
@@ -13,7 +14,7 @@ export class StudentUseCase {
     }
 
     async create(student:string, email:string, password:string){
-        const verifyEmailExist = await authVerifyEmail(email);
+        const verifyEmailExist: any = await authVerifyEmail(email, "student");
         if(verifyEmailExist.length > 0) throw new Error ("ERROR! This email is already registered!");
         
         const studentRepositorie = await this.studentRepositorie.create({student, email, password});
@@ -22,7 +23,7 @@ export class StudentUseCase {
     }
 
     async login (email:string, password:string):Promise<IStudants | null | string | {}> {
-        const authVerifyEmailExist = await authVerifyEmail(email);
+        const authVerifyEmailExist: any = await authVerifyEmail(email, "student");
         if(authVerifyEmailExist.length <= 0) {
             return "ERROR! Email or password not authorized!"
         }

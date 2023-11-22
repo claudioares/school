@@ -30,6 +30,6 @@ loginStudent.post('/login', async (req, res) => {
         
     } catch (error) {
         console.error('Error during authentication:', error);
-        res.status(500).json({ error: "Error during authentication!" });
+        return res.status(500).json({ error: "Error during authentication!" });
     }
 })

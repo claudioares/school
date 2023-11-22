@@ -22,3 +22,16 @@ model Student {
   endress    String?
   highSchool Boolean?
 }
+
+model Teacher {
+  id            String  @id @default(uuid())
+  name          String
+  email         String  @unique
+  password      String
+  endress       String
+  curriculum    String
+  formation     String
+  disciplines   String
+  date_of_birth String
+  teacher       Boolean
+}
