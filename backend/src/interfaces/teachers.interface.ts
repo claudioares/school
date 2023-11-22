@@ -31,7 +31,7 @@ export interface ITeacherAuthorized {
 
 
 export interface IMethodsForTeachers {
-    loginTeacher({email, password}:ITeacherAuthorized):Promise<ITeachers>
+    loginTeacher(email:string):Promise<ITeachers>
     getStudents ():Promise<IStudants | null>
     create({
         name, email, password, endress, curriculum, 

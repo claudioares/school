@@ -3,10 +3,10 @@ import { IStudants } from "../interfaces/students.interface";
 import { IMethodsForTeachers, ITeacherAuthorized, ITeacherCreate, ITeachers } from "../interfaces/teachers.interface";
 
 export class TeacherRepository implements IMethodsForTeachers {
-    async loginTeacher({ email, password }: ITeacherAuthorized): Promise<ITeachers> {
+    async loginTeacher(email: string): Promise<ITeachers> {
         const teacherData = await prisma.teacher.findMany({
             where:{
-                email, password
+                email
             }
         })
 

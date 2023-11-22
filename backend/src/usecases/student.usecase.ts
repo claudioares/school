@@ -28,14 +28,14 @@ export class StudentUseCase {
             return "ERROR! Email or password not authorized!"
         }
         
-        const VerifyPassword = await authVerifyPassword(password, email);    
+        const VerifyPassword = await authVerifyPassword(password, email, "students");    
         if(!VerifyPassword) {
             return "ERROR! Student not authorized!"
         }
         
         
         const studentLogin = await this.studentRepositorie.login(email)
-        const [{password:_, ...studentNotPassword},...student]:any = studentLogin;
+        const [{password:_, ...studentNotPassword},...teacher]:any = studentLogin;
         
         const jwtToken = await authTokenCreate(studentLogin?.id)
 

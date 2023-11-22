@@ -1,20 +1,36 @@
 import { Router } from "express";
 import { TeacherUseCase } from "../usecases/teacher.usecase";
+import { ILoginType } from "../interfaces/students.interface";
 
 
 export const loginTeacher = Router();
 
+type TypeQuery = {
+    email: string,
+    password: string,
+}
 
 loginTeacher.post('/teacher/login', async (req, res)=>{
-    const {email, password} = req.query;
+    const {email, password}: ILoginType = req.body as TypeQuery;
 
-    if(!email || !password) throw new Error ("Erro! All requerid!");
+    if(!email || !password){
+        return "Erro! All requerid!"
+    }
+
 
     try {
-        const teacherUseCase = await new TeacherUseCase();
+
+        const teacherUseCase = new TeacherUseCase();
+        const result = await teacherUseCase.loginTeacher(email, password) as []
+
+
+        const teacherData = result.shift();
+        const tokenJwt = result.pop();
+
 
         return res.json({
-            teacherUseCase
+            teacher: teacherData,
+            token: tokenJwt,
         })
         
     } catch (error) {

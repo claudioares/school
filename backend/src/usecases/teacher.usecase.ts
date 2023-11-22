@@ -1,5 +1,7 @@
+import { authTokenCreate } from "../ middlewares/auth.token.create";
 import { authVerifyEmail } from "../ middlewares/auth.verify.email";
-import { ITeacherCreate } from "../interfaces/teachers.interface";
+import { authVerifyPassword } from "../ middlewares/auth.verify.password";
+import { ITeacherAuthorized, ITeacherCreate } from "../interfaces/teachers.interface";
 import { TeacherRepository } from "../repositories/teacher.repository";
 
 export class TeacherUseCase {
@@ -14,10 +16,19 @@ export class TeacherUseCase {
         return resultRepositorie;
     }
 
-    async loginTeacher (email:string, password:string) {
-        const resultRepositorie = await this.teacherRepository.loginTeacher({email, password})
+    async loginTeacher (email:string, password:string):Promise<ITeacherAuthorized | null | string | {}> {
+        const VerifyPassword = await authVerifyPassword(password, email, "teachers");
+        if(!VerifyPassword) {
+            return "ERROR! Not authorized!"
+        }
+        
+        
+        const repositorieTeacherLogin = await this.teacherRepository.loginTeacher(email)
+        const jwtToken = await authTokenCreate(repositorieTeacherLogin?.id)
+        
+        const [{password:_, ...teacherNotPassword},...student]:any = repositorieTeacherLogin;
 
-        return resultRepositorie
+        return [teacherNotPassword, jwtToken]
     }
 
     async createTeacher (
