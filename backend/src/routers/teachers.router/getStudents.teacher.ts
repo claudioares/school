@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { TeacherUseCase } from "../usecases/teacher.usecase";
+import { TeacherUseCase } from "../../usecases/teacher.usecase";
 
 
 export const getStudentsTeacher = Router();

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { TeacherUseCase } from "../usecases/teacher.usecase";
-import { ILoginType } from "../interfaces/students.interface";
+import { TeacherUseCase } from "../../usecases/teacher.usecase";
+import { ILoginType } from "../../interfaces/students.interface";
 
 
 export const loginTeacher = Router();

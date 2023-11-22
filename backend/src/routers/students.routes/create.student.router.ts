@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { StudentUseCase } from "../usecases/student.usecase";
+import { StudentUseCase } from "../../usecases/student.usecase";
 import bcrypt from "bcrypt";
 
-export const createStudentRouter = Router();
+export const createStudent = Router();
 
-createStudentRouter.post("/sign", async (req, res)=>{
+createStudent.post("/sign", async (req, res)=>{
     const { student, email, password} = req.body;
 
     if(!student || !email || !password) throw new Error ("ERROR! Provide all creation parameters!");

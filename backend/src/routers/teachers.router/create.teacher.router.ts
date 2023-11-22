@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { ITeacherCreate } from "../interfaces/teachers.interface";
-import { TeacherUseCase } from "../usecases/teacher.usecase";
+import { ITeacherCreate } from "../../interfaces/teachers.interface";
+import { TeacherUseCase } from "../../usecases/teacher.usecase";
 import bcrypt from "bcrypt";
 
 
-export const createdTeacher = Router();
+export const createTeacher = Router();
 
 
-createdTeacher.post("/create/teacher", async (req, res)=>{
+createTeacher.post("/create/teacher", async (req, res)=>{
     const {
         name, email, password, curriculum, date_of_birth,
         disciplines, endress, formation, teacher
