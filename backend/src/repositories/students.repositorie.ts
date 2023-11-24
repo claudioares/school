@@ -34,21 +34,24 @@ export class StudentsRepositorie implements IMethodsStudant {
     }
 
     async updateStudentId(data:IUpdateStudentId): Promise<IStudants | string | boolean> {
-        const studentId = await prisma.student.updateMany({
+    
+        const studentId = await prisma.student.update({
             where:{
                 id:data.id
             },
             data:{
-                student:data.student, 
-                email:data.email, 
-                birth:data.birth, 
+                student:data.student,
+                birth:data.birth,
                 cpf:data.cpf, 
                 endress:data.endress, 
                 nameFather:data.nameFather, 
                 nameMother:data.nameMother, 
                 password:data.password,
+                highSchool:data.highSchool,
             }
         })
+
+        
 
         return studentId as unknown as IStudants;
     }

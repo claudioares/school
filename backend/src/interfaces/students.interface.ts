@@ -3,7 +3,7 @@ export interface IStudants {
     student: string;
     email: string;
     password: string;
-    birth: Date | null;
+    birth: string | null;
     nameMother: string | null;
     cpf: string | null;
     nameFather: string | null;
@@ -25,13 +25,13 @@ export interface ILoginType {
 export interface IUpdateStudentId {
     id: string;
     student: string;
-    email: string;
     password: string;
-    birth: Date | null;
+    birth: string;
     nameMother: string | null;
     nameFather: string | null;
     cpf: string | null;
     endress: string | null;
+    highSchool: boolean | null;
 }
 
 

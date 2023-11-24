@@ -11,13 +11,13 @@ datasource db {
 }
 
 model Student {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   student    String
-  email      String    @unique
+  email      String   @unique
   password   String
-  birth      DateTime?
+  birth      String?
   nameMother String?
-  cpf        String?   @unique
+  cpf        String?  @unique
   nameFather String?
   endress    String?
   highSchool Boolean?
