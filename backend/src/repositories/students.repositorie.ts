@@ -1,7 +1,8 @@
 import { prisma } from "../database/prisma.config";
-import { ICreateStudantType, IMethodsStudant, IStudants, ILoginType } from "../interfaces/students.interface";
+import { ICreateStudantType, IMethodsStudant, IStudants, IUpdateStudentId } from "../interfaces/students.interface";
 
 export class StudentsRepositorie implements IMethodsStudant {
+  
     async create({ student, email, password }: ICreateStudantType): Promise<IStudants> {
         const dataBase = await prisma.student.create({
             data:{
@@ -21,5 +22,34 @@ export class StudentsRepositorie implements IMethodsStudant {
 
         return studentLogin as unknown as IStudants;
     }
-    
+
+    async getStudentId(id: string): Promise<IStudants> {
+        const studentId = await prisma.student.findUnique({
+            where:{
+                id
+            }
+        })
+
+        return studentId as unknown as IStudants;
+    }
+
+    async updateStudentId(data:IUpdateStudentId): Promise<IStudants | string | boolean> {
+        const studentId = await prisma.student.updateMany({
+            where:{
+                id:data.id
+            },
+            data:{
+                student:data.student, 
+                email:data.email, 
+                birth:data.birth, 
+                cpf:data.cpf, 
+                endress:data.endress, 
+                nameFather:data.nameFather, 
+                nameMother:data.nameMother, 
+                password:data.password,
+            }
+        })
+
+        return studentId as unknown as IStudants;
+    }
 }

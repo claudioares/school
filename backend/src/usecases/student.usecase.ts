@@ -1,7 +1,8 @@
 import { authTokenCreate } from "../ middlewares/auth.token.create";
 import { authVerifyEmail } from "../ middlewares/auth.verify.email";
+import { authVerifyId } from "../ middlewares/auth.verify.id";
 import { authVerifyPassword } from "../ middlewares/auth.verify.password";
-import { IStudants } from "../interfaces/students.interface";
+import { IStudants, IUpdateStudentId } from "../interfaces/students.interface";
 import { StudentsRepositorie } from "../repositories/students.repositorie";
 
 
@@ -41,5 +42,25 @@ export class StudentUseCase {
 
     
         return [studentNotPassword, jwtToken];
+    }
+
+    async getStudentId (id: string):Promise<IStudants | string | boolean> {
+        const verifyId = await authVerifyId(id);
+        
+        if (!verifyId) {return false};
+
+        const studentId = await this.studentRepositorie.getStudentId(id)
+
+        return studentId;
+    }
+
+    async updateStudentId (data:IUpdateStudentId):Promise<IStudants | string | boolean> {
+        const verifyId = await authVerifyId(data.id);
+        
+        if (!verifyId) {return false};
+
+        const studentId = await this.studentRepositorie.updateStudentId(data)
+
+        return studentId;
     }
 }

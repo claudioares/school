@@ -1,4 +1,3 @@
-
 export interface IStudants {
     id: string;
     student: string;
@@ -23,8 +22,22 @@ export interface ILoginType {
     password: string,
 }
 
+export interface IUpdateStudentId {
+    id: string;
+    student: string;
+    email: string;
+    password: string;
+    birth: Date | null;
+    nameMother: string | null;
+    nameFather: string | null;
+    cpf: string | null;
+    endress: string | null;
+}
+
 
 export interface IMethodsStudant {
     create({student, email, password }:ICreateStudantType):Promise<IStudants>
     login(email:string):Promise<IStudants | null>
+    getStudentId(id:string):Promise<IStudants | null>
+    updateStudentId(data:IUpdateStudentId):Promise<IStudants | string | boolean>
 }
