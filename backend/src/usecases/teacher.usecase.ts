@@ -51,6 +51,8 @@ export class TeacherUseCase {
             endress, teacher
         });
 
-        return createUseCase;
+        const {password:_, ...dataTeacher} = createUseCase
+
+        return dataTeacher;
     }
 }

@@ -23,8 +23,9 @@ export interface ILoginType {
 }
 
 export interface IUpdateStudentId {
-    id: string;
+    id: string,
     student: string;
+    email: string;
     password: string;
     birth: string;
     nameMother: string | null;

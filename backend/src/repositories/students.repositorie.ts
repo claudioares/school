@@ -4,6 +4,7 @@ import { ICreateStudantType, IMethodsStudant, IStudants, IUpdateStudentId } from
 export class StudentsRepositorie implements IMethodsStudant {
   
     async create({ student, email, password }: ICreateStudantType): Promise<IStudants> {
+       
         const dataBase = await prisma.student.create({
             data:{
                 student, email, password
@@ -34,10 +35,10 @@ export class StudentsRepositorie implements IMethodsStudant {
     }
 
     async updateStudentId(data:IUpdateStudentId): Promise<IStudants | string | boolean> {
-    
+
         const studentId = await prisma.student.update({
             where:{
-                id:data.id
+                email:data.email
             },
             data:{
                 student:data.student,

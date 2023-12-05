@@ -1,12 +1,15 @@
-import { authTokenCreate } from "../ middlewares/auth.token.create";
 import { authVerifyEmail } from "../ middlewares/auth.verify.email";
 import { authVerifyId } from "../ middlewares/auth.verify.id";
 import { authVerifyPassword } from "../ middlewares/auth.verify.password";
 import { IStudants, IUpdateStudentId } from "../interfaces/students.interface";
 import { StudentsRepositorie } from "../repositories/students.repositorie";
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
 
 
-
+type JwtPeload = {
+    id: number;
+}
 export class StudentUseCase {
     
     private studentRepositorie:StudentsRepositorie
@@ -17,8 +20,10 @@ export class StudentUseCase {
     async create(student:string, email:string, password:string){
         const verifyEmailExist: any = await authVerifyEmail(email, "student");
         if(verifyEmailExist.length > 0) throw new Error ("ERROR! This email is already registered!");
-        
-        const studentRepositorie = await this.studentRepositorie.create({student, email, password});
+
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        const studentRepositorie = await this.studentRepositorie.create({student, email, password:hashPassword});
 
         return studentRepositorie;
     }
@@ -26,22 +31,26 @@ export class StudentUseCase {
     async login (email:string, password:string):Promise<IStudants | null | string | {}> {
         const authVerifyEmailExist: any = await authVerifyEmail(email, "student");
         if(authVerifyEmailExist.length <= 0) {
-            return "ERROR! Email or password not authorized!"
+            throw new Error ("ERROR! Email or password not authorized!")
         }
         
-        const VerifyPassword = await authVerifyPassword(password, email, "students");    
-        if(!VerifyPassword) {
-            return "ERROR! Student not authorized!"
+        const verifyPassword = await authVerifyPassword(password, email, "student");
+
+       
+        if(!verifyPassword) {
+            throw new Error ("ERROR! Student not authorized!")
         }
         
         
         const studentLogin = await this.studentRepositorie.login(email)
-        const [{password:_, ...studentNotPassword},...teacher]:any = studentLogin;
+        if(!studentLogin){throw new Error ("Student not found!")}
+
+        const [{password:_, ...studentNotPassword},...student]:any = studentLogin;
         
-        const jwtToken = await authTokenCreate(studentLogin?.id)
+        const token = jwt.sign({id: studentNotPassword.id}, process.env.HASHTOKEN ?? '', {expiresIn: '8h'});
 
     
-        return [studentNotPassword, jwtToken];
+        return [studentNotPassword, token];
     }
 
     async getStudentId (id: string):Promise<IStudants | string | boolean> {
@@ -54,13 +63,26 @@ export class StudentUseCase {
         return studentId;
     }
 
-    async updateStudentId (data:IUpdateStudentId):Promise<IStudants | string | boolean> {
-        const verifyId = await authVerifyId(data.id);
-        
-        if (!verifyId) {return false};
+    async updateStudentId (authorization:string | undefined, data:IUpdateStudentId):Promise<string> {
 
-        const studentId = await this.studentRepositorie.updateStudentId(data)
+        if(!authorization) {throw new Error ("Not authorization!")}
+        const tokenUser = authorization.split(" ")[1];
 
-        return studentId;
+        const {id:_id} = jwt.verify(tokenUser, process.env.HASHTOKEN ?? '') as JwtPeload;
+        const userId = String(_id)
+        const dataStudent = await this.studentRepositorie.getStudentId(userId) as IUpdateStudentId;
+        if(!dataStudent) {throw new Error ("Student not found!")};
+
+        const password = await bcrypt.hash(dataStudent.password, 10);
+
+        const email = dataStudent.email
+        const {email:_email, password:_password, ...user} = data;
+        const dataUser = {email, password, ...user}
+
+        const resultRepsitorie = await this.studentRepositorie.updateStudentId(dataUser) as IUpdateStudentId;
+
+        if(!resultRepsitorie.id){ throw new Error ("Student not found!")}
+
+        return "Change successful!";
     }
 }
