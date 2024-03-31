@@ -12,7 +12,7 @@ export class TeacherRepository implements IMethodsForTeachers {
 
         return teacherData as unknown as ITeachers;
     }
-    async getStudents(): Promise<IStudants | null> {
+    async teacherGetStudents(): Promise<IStudants | null> {
        const studentsData = await prisma.student.findMany();
        return studentsData as unknown as IStudants;
     }

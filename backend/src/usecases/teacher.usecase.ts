@@ -12,7 +12,7 @@ export class TeacherUseCase {
 
 
     async getStudent (id:string) {
-        const resultRepositorie = await this.teacherRepository.getStudents();
+        const resultRepositorie = await this.teacherRepository.teacherGetStudents();
         return resultRepositorie;
     }
 

@@ -2,9 +2,9 @@ import { Router } from "express";
 import { TeacherUseCase } from "../../usecases/teacher.usecase";
 
 
-export const getStudentsTeacher = Router();
+export const teacherGetStudents = Router();
 
-getStudentsTeacher.get('/students/teacher', async (req, res)=>{
+teacherGetStudents.get('/students/teacher', async (req, res)=>{
     const {id}:any = req.query
     try {
         const dataStudents = new TeacherUseCase();

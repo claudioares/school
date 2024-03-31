@@ -32,7 +32,7 @@ export interface ITeacherAuthorized {
 
 export interface IMethodsForTeachers {
     loginTeacher(email:string):Promise<ITeachers>
-    getStudents ():Promise<IStudants | null>
+    teacherGetStudents():Promise<IStudants | null>
     create({
         name, email, password, endress, curriculum, 
         formation, disciplines, date_of_birth, teacher
